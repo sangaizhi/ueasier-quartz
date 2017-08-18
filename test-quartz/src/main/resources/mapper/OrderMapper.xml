@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zyunc.ueasier.quartz.test.dao.OrderDao">
+    <insert id="saveBatch">
+        <![CDATA[
+            INSERT INTO t_order (
+                t_code,t_amount,user_id,user_name,date
+            ) VALUES
+        ]]>
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.code},
+            #{item.amount},
+            #{item.userId},
+            #{item.userName},
+            #{item.date}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zyunc.ueasier.quartz.dao.ScheduleJobDao">
+
+    <resultMap id="ScheduleJobMap" type="cn.zyunc.ueasier.quartz.vo.ScheduleJobVO">
+        <result property="jobId" column="jobId"/>
+        <result property="jobName" column="jobName"/>
+        <result property="jobGroup" column="jobGroup"/>
+        <result property="jobStatus" column="jobStatus"/>
+        <result property="jobCron" column="jobCron"/>
+        <result property="jobDesc" column="jobDesc"/>
+        <result property="jobClass" column="jobClass"/>
+        <result property="jobMethod" column="jobMethod"/>
+        <result property="jobIsConcurrent" column="jobIsConcurrent"/>
+        <result property="jobSpringId" column="jobSpringId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+    </resultMap>
+    
+    <sql id="columns">
+        <![CDATA[
+        	job_id as jobId,
+        	job_name as jobName,
+        	job_group as jobGroup,
+        	job_status as jobStatus,
+        	job_cron as jobCron,
+        	job_desc as jobDesc,
+        	job_class as jobClass,
+        	job_method as jobMethod,
+        	job_is_concurrent as jobIsConcurrent,
+        	job_spring_id as jobSpringId,
+        	create_time as createTime,
+        	update_time as updateTime
+        ]]>
+    </sql>
+    
+    <sql id="where">
+    	<where>
+           	<if test="@Ognl@isNotEmpty(jobId)">
+            	<![CDATA[ AND job_id = #{jobId} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobName)">
+            	<![CDATA[ AND job_name = #{jobName} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobGroup)">
+            	<![CDATA[ AND job_group = #{jobGroup} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobStatus)">
+            	<![CDATA[ AND job_status = #{jobStatus} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobCron)">
+            	<![CDATA[ AND job_cron = #{jobCron} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobDesc)">
+            	<![CDATA[ AND job_desc = #{jobDesc} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobClass)">
+            	<![CDATA[ AND job_class = #{jobClass} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobMethod)">
+            	<![CDATA[ AND job_method = #{jobMethod} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobIsConcurrent)">
+            	<![CDATA[ AND job_is_concurrent = #{jobIsConcurrent} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(jobSpringId)">
+            	<![CDATA[ AND job_spring_id = #{jobSpringId} ]]>
+            </if>
+           	<if test="@Ognl@isNotEmpty(createTime)">
+           		<![CDATA[ AND create_time = #{createTime} ]]>
+           	</if>
+           	<if test="@Ognl@isNotEmpty(createTimeBegin)">
+           		<![CDATA[ AND create_time >= #{createTimeBegin} ]]>
+           	</if>
+           	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+            	<![CDATA[ AND create_time <= #{createTimeEnd} ]]>
+           	</if>
+           	<if test="@Ognl@isNotEmpty(updateTime)">
+           		<![CDATA[ AND update_time = #{updateTime} ]]>
+           	</if>
+           	<if test="@Ognl@isNotEmpty(updateTimeBegin)">
+           		<![CDATA[ AND update_time >= #{updateTimeBegin} ]]>
+           	</if>
+           	<if test="@Ognl@isNotEmpty(updateTimeEnd)">
+            	<![CDATA[ AND update_time <= #{updateTimeEnd} ]]>
+           	</if>
+        </where>
+    </sql>
+    
+    <select id="getById" resultType="cn.zyunc.ueasier.quartz.vo.ScheduleJobVO">
+        SELECT 
+        	<include refid="columns" />
+        FROM
+            t_schedule_job
+        <where> 
+            job_id = #{id} 
+        </where>
+    </select>
+    
+    <select id="getByCondition" resultType="cn.zyunc.ueasier.quartz.vo.ScheduleJobVO">
+        SELECT
+            <include refid="columns" />
+        FROM
+            t_schedule_job 
+        <include refid="where"/>
+    </select>
+    
+    <select id="queryList" resultMap="ScheduleJobMap">
+        SELECT
+            <include refid="columns" />
+        FROM
+            t_schedule_job 
+        <include refid="where"/>
+    </select>
+        
+    <select id="count" resultType="long">
+	    SELECT
+	        count(1)
+	    FROM
+	        t_schedule_job
+        <include refid="where"/>
+    </select>
+    
+    <select id="queryPage" resultMap="ScheduleJobMap">
+        SELECT
+            <include refid="columns" />
+        FROM
+            t_schedule_job 
+        <include refid="where"/>
+	    <!-- 请手动在{startPosition}和{pageSize}前面加上"#"号并删除本注释 --> 
+        LIMIT {startPosition},{pageSize}
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="jobId">
+	    INSERT INTO t_schedule_job (
+	        job_name,
+	        job_group,
+	        job_status,
+	        job_cron,
+	        job_desc,
+	        job_class,
+	        job_method,
+	        job_is_concurrent,
+	        job_spring_id,
+	        create_time,
+	        update_time
+	    ) VALUES (
+	        #{jobId},
+	        #{jobName},
+	        #{jobGroup},
+	        #{jobStatus},
+	        #{jobCron},
+	        #{jobDesc},
+	        #{jobClass},
+	        #{jobMethod},
+	        #{jobIsConcurrent},
+	        #{jobSpringId},
+	        #{createTime},
+	        #{updateTime}
+	    )
+    </insert>
+
+    <insert id="saveBatch">
+        INSERT INTO t_schedule_job (
+            job_name,
+            job_group,
+            job_status,
+            job_cron,
+            job_desc,
+            job_class,
+            job_method,
+            job_is_concurrent,
+            job_spring_id,
+            create_time,
+            update_time
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.jobId},
+                #{item.jobName},
+                #{item.jobGroup},
+                #{item.jobStatus},
+                #{item.jobCron},
+                #{item.jobDesc},
+                #{item.jobClass},
+                #{item.jobMethod},
+                #{item.jobIsConcurrent},
+                #{item.jobSpringId},
+                #{item.createTime},
+                #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+    
+    <update id="updateById">
+    	UPDATE
+        	t_schedule_job
+    	<set>
+        	<if test="jobName != null">
+        		<![CDATA[ job_name = #{jobName} ]]>,
+        	</if>
+        	<if test="jobGroup != null">
+        		<![CDATA[ job_group = #{jobGroup} ]]>,
+        	</if>
+        	<if test="jobStatus != null">
+        		<![CDATA[ job_status = #{jobStatus} ]]>,
+        	</if>
+        	<if test="jobCron != null">
+        		<![CDATA[ job_cron = #{jobCron} ]]>,
+        	</if>
+        	<if test="jobDesc != null">
+        		<![CDATA[ job_desc = #{jobDesc} ]]>,
+        	</if>
+        	<if test="jobClass != null">
+        		<![CDATA[ job_class = #{jobClass} ]]>,
+        	</if>
+        	<if test="jobMethod != null">
+        		<![CDATA[ job_method = #{jobMethod} ]]>,
+        	</if>
+        	<if test="jobIsConcurrent != null">
+        		<![CDATA[ job_is_concurrent = #{jobIsConcurrent} ]]>,
+        	</if>
+        	<if test="jobSpringId != null">
+        		<![CDATA[ job_spring_id = #{jobSpringId} ]]>,
+        	</if>
+        	<if test="createTime != null">
+        		<![CDATA[ create_time = #{createTime} ]]>,
+        	</if>
+        	<if test="updateTime != null">
+        		<![CDATA[ update_time = #{updateTime} ]]>
+        	</if>
+    	</set>
+    	<where>
+        	job_id = #{jobId}
+    	</where>
+    </update>
+    
+    <delete id="deleteById">
+	    DELETE
+	    FROM
+	        t_schedule_job
+	    <where>
+	        job_id = #{id} 
+	    </where>
+    </delete>
+    
+    <delete id="deleteBatchByIds">
+        DELETE 
+        FROM
+            t_schedule_job
+        WHERE
+            job_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+#{item}        </foreach>
+    </delete>
+</mapper>
+
